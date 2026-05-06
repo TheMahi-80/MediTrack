@@ -1,0 +1,6 @@
+{
+  "name": "MediTrack",
+  "description": "A scalable, production-ready digital health record system for medical centers and hospitals featuring role-based access, structured prescriptions, and patient history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

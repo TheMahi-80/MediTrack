@@ -1,0 +1,88 @@
+{
+  "entities": {
+    "Institution": {
+      "title": "Institution",
+      "description": "A hospital or medical clinic.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "address"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User profile with role management.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["PATIENT", "DOCTOR_PENDING", "DOCTOR", "ADMIN"] },
+        "institutionId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Prescription": {
+      "title": "Prescription",
+      "description": "Medical prescription record.",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "doctorId": { "type": "string" },
+        "institutionId": { "type": "string" },
+        "diagnosis": { "type": "string" },
+        "medicines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "dosage": { "type": "string" },
+              "duration": { "type": "string" }
+            }
+          }
+        },
+        "notes": { "type": "string" },
+        "version": { "type": "integer" },
+        "parentPrescriptionId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "doctorId", "institutionId", "diagnosis", "medicines"]
+    },
+    "QueueEntry": {
+      "title": "Queue Entry",
+      "description": "A patient waiting in the queue.",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "patientName": { "type": "string" },
+        "institutionId": { "type": "string" },
+        "status": { "type": "string", "enum": ["WAITING", "IN_CONSULTATION", "COMPLETED", "CANCELLED"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["patientId", "institutionId", "status"]
+    }
+  },
+  "firestore": {
+    "institutions": {
+      "schema": "Institution",
+      "description": "List of medical institutions."
+    },
+    "users": {
+        "schema": "UserProfile",
+        "description": "User profiles and roles."
+    },
+    "prescriptions": {
+      "schema": "Prescription",
+      "description": "Medical prescriptions."
+    },
+    "queues": {
+      "schema": "QueueEntry",
+      "description": "Live queue management per institution."
+    }
+  }
+}
