@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../contexts/AuthContext';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
+import ImageUploadDropzone from './ui/ImageUploadDropzone';
 import { 
   X,
   User2, 
@@ -170,28 +171,14 @@ export default function EditProfileModal({ onClose }: EditProfileModalProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 space-y-8">
-          {/* Avatar Preview & URL */}
-          <div className="flex flex-col sm:flex-row items-center gap-6 pb-8 border-b border-slate-100 dark:border-slate-800">
-            <div className="w-24 h-24 rounded-[32px] bg-slate-100 dark:bg-slate-800 border-4 border-white dark:border-slate-800 shadow-xl overflow-hidden flex-shrink-0 flex items-center justify-center text-slate-300">
-              {photoURL ? (
-                <img src={photoURL} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <User2 size={40} />
-              )}
-            </div>
-            <div className="flex-1 w-full space-y-2">
-              <label className="text-[10px] font-bold uppercase text-slate-400 tracking-widest block pl-1">Profile Image URL</label>
-              <div className="relative">
-                <Camera className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                <input 
-                  type="url"
-                  value={photoURL}
-                  onChange={e => setPhotoURL(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-950 border-none rounded-2xl pl-12 pr-4 py-4 text-sm dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all font-mono"
-                  placeholder="https://example.com/avatar.jpg"
-                />
-              </div>
-            </div>
+          {/* Avatar Upload Dropzone */}
+          <div className="pb-6 border-b border-slate-100 dark:border-slate-800">
+            <ImageUploadDropzone
+              value={photoURL}
+              onChange={setPhotoURL}
+              label="Profile Photo"
+              optional
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -34,8 +34,8 @@ export const Logo = ({ size = 40, className = "" }: { size?: number, className?:
 
       <defs>
         <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#0EA5E9" />
-          <stop offset="1" stopColor="#2563EB" />
+          <stop stopColor="#9333EA" />
+          <stop offset="1" stopColor="#C084FC" />
         </linearGradient>
       </defs>
     </svg>

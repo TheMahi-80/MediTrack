@@ -26,12 +26,17 @@ export default function Queue() {
 
     const q = query(
       collection(db, 'queues'),
-      where('institutionId', '==', profile.institutionId || 'default-clinic'),
-      orderBy('createdAt', 'asc')
+      where('institutionId', '==', profile.institutionId || 'default-clinic')
     );
 
     const unsub = onSnapshot(q, (snap) => {
-      setQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as QueueEntry)));
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as QueueEntry));
+      items.sort((a, b) => {
+        const timeA = a.createdAt?.toDate?.()?.getTime() || a.createdAt?.seconds * 1000 || 0;
+        const timeB = b.createdAt?.toDate?.()?.getTime() || b.createdAt?.seconds * 1000 || 0;
+        return timeA - timeB;
+      });
+      setQueue(items);
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'queues');

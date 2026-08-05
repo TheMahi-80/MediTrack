@@ -34,7 +34,21 @@ export default function AuthPage() {
       await signInWithGoogle();
       navigate('/app');
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+      let message = 'Failed to sign in';
+      try {
+        const parsed = JSON.parse(err.message);
+        message = parsed.error || message;
+      } catch {
+        message = err.message || message;
+      }
+
+      if (message.includes('auth/popup-blocked')) {
+        message = 'The login popup was blocked by your browser. Please allow popups for this site and try again.';
+      } else if (message.includes('auth/popup-closed-by-user')) {
+        message = 'The login window was closed before completing the sign-in.';
+      }
+
+      setError(message);
     } finally {
       setLoading(false);
     }

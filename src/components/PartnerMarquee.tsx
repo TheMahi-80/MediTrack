@@ -3,12 +3,12 @@ import { motion } from 'motion/react';
 import { Building2, ShieldCheck, HeartPulse, Stethoscope, Microscope, Activity } from 'lucide-react';
 
 const partners = [
-  { name: 'City General Hospital', icon: <Building2 className="w-5 h-5" /> },
-  { name: 'HealthFirst Clinic', icon: <HeartPulse className="w-5 h-5" /> },
-  { name: 'Global Medical Center', icon: <Activity className="w-5 h-5" /> },
-  { name: 'Unity Health Group', icon: <ShieldCheck className="w-5 h-5" /> },
-  { name: 'St. Mary Specialized', icon: <Stethoscope className="w-5 h-5" /> },
-  { name: 'Apex Research Institute', icon: <Microscope className="w-5 h-5" /> },
+  { name: 'Dhaka Care Medical', icon: <Building2 className="w-5 h-5" /> },
+  { name: 'Square Health Network', icon: <HeartPulse className="w-5 h-5" /> },
+  { name: 'Labaid Diagnostics', icon: <Activity className="w-5 h-5" /> },
+  { name: 'Popular Medical Center', icon: <ShieldCheck className="w-5 h-5" /> },
+  { name: 'Ibn Sina Specialized', icon: <Stethoscope className="w-5 h-5" /> },
+  { name: 'Evercare Research Lab', icon: <Microscope className="w-5 h-5" /> },
 ];
 
 export default function PartnerMarquee({ variant = 'default' }: { variant?: 'default' | 'subtle' }) {
@@ -17,7 +17,7 @@ export default function PartnerMarquee({ variant = 'default' }: { variant?: 'def
   return (
     <div className={`overflow-hidden relative ${variant === 'default' ? 'py-8 border-y border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20' : 'py-4'}`}>
       <div className="max-w-7xl mx-auto px-6 mb-4">
-        <span className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 tracking-[0.2em]">
+        <span className="text-[10px] font-black uppercase text-purple-600 dark:text-purple-400 tracking-[0.2em]">
           Our Network Partners
         </span>
       </div>

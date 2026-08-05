@@ -20,6 +20,7 @@ import { cn, UserRole } from '../../lib/utils';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import ProfileCompletionModal from '../ProfileCompletionModal';
 import Footer from './Footer';
+import AIChat from '../AIChat';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { profile, isAdmin, isDoctor } = useAuth();
@@ -154,6 +155,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Footer />
         </div>
       </main>
+      <AIChat />
     </div>
   );
 }

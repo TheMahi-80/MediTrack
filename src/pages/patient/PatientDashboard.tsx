@@ -57,12 +57,16 @@ export default function PatientDashboard() {
     // Fetch latest prescriptions
     const qP = query(
       collection(db, 'prescriptions'),
-      where('patientId', '==', profile.uid),
-      orderBy('createdAt', 'desc'),
-      limit(3)
+      where('patientId', '==', profile.uid)
     );
     const unsubP = onSnapshot(qP, (snap) => {
-      setPrescriptions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Prescription)));
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Prescription));
+      items.sort((a, b) => {
+        const timeA = a.createdAt?.toDate?.()?.getTime() || a.createdAt?.seconds * 1000 || 0;
+        const timeB = b.createdAt?.toDate?.()?.getTime() || b.createdAt?.seconds * 1000 || 0;
+        return timeB - timeA;
+      });
+      setPrescriptions(items.slice(0, 3));
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'prescriptions');
     });
@@ -70,16 +74,13 @@ export default function PatientDashboard() {
     // Fetch active queue status
     const qQ = query(
       collection(db, 'queues'),
-      where('patientId', '==', profile.uid),
-      where('status', 'in', [QueueStatus.WAITING, QueueStatus.IN_CONSULTATION]),
-      limit(1)
+      where('patientId', '==', profile.uid)
     );
     const unsubQ = onSnapshot(qQ, (snap) => {
-      if (!snap.empty) {
-        setQueueEntry({ id: snap.docs[0].id, ...snap.docs[0].data() } as QueueEntry);
-      } else {
-        setQueueEntry(null);
-      }
+      const active = snap.docs
+        .map(doc => ({ id: doc.id, ...doc.data() } as QueueEntry))
+        .find(q => q.status === QueueStatus.WAITING || q.status === QueueStatus.IN_CONSULTATION);
+      setQueueEntry(active || null);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'queues');
     });

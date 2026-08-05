@@ -22,6 +22,7 @@ export default function Prescriptions() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!profile) return;
@@ -30,28 +31,30 @@ export default function Prescriptions() {
     if (isPatient) {
       q = query(
         collection(db, 'prescriptions'),
-        where('patientId', '==', profile.uid),
-        orderBy('createdAt', 'desc')
+        where('patientId', '==', profile.uid)
       );
     } else if (isDoctor) {
       q = query(
         collection(db, 'prescriptions'),
-        where('institutionId', '==', profile.institutionId),
-        orderBy('createdAt', 'desc')
+        where('institutionId', '==', profile.institutionId || 'default-clinic')
       );
     } else if (profile.role === UserRole.ADMIN) {
-        q = query(collection(db, 'prescriptions'), orderBy('createdAt', 'desc'));
+        q = query(collection(db, 'prescriptions'));
     } else {
-        // For DOCTOR_PENDING or other roles, show nothing or own records if they were a patient
         q = query(
           collection(db, 'prescriptions'),
-          where('patientId', '==', profile.uid),
-          orderBy('createdAt', 'desc')
+          where('patientId', '==', profile.uid)
         );
     }
 
     const unsub = onSnapshot(q, (snap) => {
-      setPrescriptions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Prescription)));
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Prescription));
+      items.sort((a, b) => {
+        const timeA = a.createdAt?.toDate?.()?.getTime() || a.createdAt?.seconds * 1000 || 0;
+        const timeB = b.createdAt?.toDate?.()?.getTime() || b.createdAt?.seconds * 1000 || 0;
+        return timeB - timeA;
+      });
+      setPrescriptions(items);
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'prescriptions');
@@ -59,6 +62,16 @@ export default function Prescriptions() {
 
     return () => unsub();
   }, [profile, isPatient, isDoctor]);
+
+  const filteredPrescriptions = prescriptions.filter(p => {
+    if (!searchQuery.trim()) return true;
+    const term = searchQuery.toLowerCase();
+    const diagMatch = p.diagnosis?.toLowerCase().includes(term);
+    const doctorMatch = p.doctorName?.toLowerCase().includes(term);
+    const patientMatch = p.patientName?.toLowerCase().includes(term);
+    const medMatch = p.medicines?.some(m => m.name.toLowerCase().includes(term));
+    return diagMatch || doctorMatch || patientMatch || medMatch;
+  });
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -83,7 +96,9 @@ export default function Prescriptions() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
           <input 
             type="text" 
-            placeholder="Search diagnosis..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search diagnosis, medicine, doctor..." 
             className="w-full bg-slate-100 dark:bg-slate-900 border-none rounded-full pl-12 pr-6 py-3.5 text-sm focus:ring-2 focus:ring-blue-500 transition-all font-medium placeholder:text-slate-400 dark:text-white"
           />
         </div>
@@ -100,9 +115,9 @@ export default function Prescriptions() {
         </div>
         {loading ? (
           <div className="p-20 text-center text-slate-400 animate-pulse">Loading records...</div>
-        ) : prescriptions.length > 0 ? (
+        ) : filteredPrescriptions.length > 0 ? (
           <div className="divide-y divide-slate-50 dark:divide-slate-800">
-            {prescriptions.map((p) => (
+            {filteredPrescriptions.map((p) => (
               <div 
                 key={p.id} 
                 onClick={() => setSelectedPrescription(p)}

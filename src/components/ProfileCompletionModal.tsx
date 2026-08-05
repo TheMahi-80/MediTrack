@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../contexts/AuthContext';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
+import ImageUploadDropzone from './ui/ImageUploadDropzone';
 import { 
   HeartPulse, 
   Ruler, 
@@ -293,22 +294,12 @@ export default function ProfileCompletionModal() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center px-1">
-                      <label className="text-[10px] font-bold uppercase text-slate-400 tracking-widest block">Profile Photo URL</label>
-                      <span className="text-[8px] font-black text-slate-300 uppercase tracking-[0.2em]">Optional</span>
-                    </div>
-                    <div className="relative">
-                      <Camera className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                      <input 
-                        type="url"
-                        value={photoURL}
-                        onChange={e => setPhotoURL(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl pl-12 pr-4 py-4 text-sm dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-                        placeholder="https://example.com/avatar.jpg"
-                      />
-                    </div>
-                  </div>
+                  <ImageUploadDropzone
+                    value={photoURL}
+                    onChange={setPhotoURL}
+                    label="Profile Photo"
+                    optional
+                  />
                 </div>
               )}
 

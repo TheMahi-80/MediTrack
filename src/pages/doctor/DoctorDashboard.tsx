@@ -57,12 +57,17 @@ export default function DoctorDashboard() {
     const q = query(
       collection(db, 'queues'),
       where('institutionId', '==', profile.institutionId),
-      where('status', '==', QueueStatus.WAITING),
-      orderBy('createdAt', 'asc')
+      where('status', '==', QueueStatus.WAITING)
     );
     
     return onSnapshot(q, (snap) => {
-      setQueue(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as QueueEntry)));
+      const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as QueueEntry));
+      items.sort((a, b) => {
+        const timeA = a.createdAt?.toDate?.()?.getTime() || a.createdAt?.seconds * 1000 || 0;
+        const timeB = b.createdAt?.toDate?.()?.getTime() || b.createdAt?.seconds * 1000 || 0;
+        return timeA - timeB;
+      });
+      setQueue(items);
     }, (error) => {
       handleFirestoreError(error, OperationType.LIST, 'queues');
     });
