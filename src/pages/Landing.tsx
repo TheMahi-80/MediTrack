@@ -114,9 +114,9 @@ export default function Landing() {
               transition={{ delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] text-slate-900 dark:text-white"
             >
-              A New Chapter in Bangladeshi Healthcare &{' '}
+              A New Chapter in Bangladeshi Healthcare
               <span className="bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 bg-clip-text text-transparent">
-                Report Tracking With AI.
+               
               </span>
             </motion.h1>
 
@@ -135,7 +135,7 @@ export default function Landing() {
               transition={{ delay: 0.25 }}
               className="text-slate-600 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-medium"
             >
-              Elevate your clinical workflow and medical report management. MediTrack is designed for doctors and patients across Bangladesh who value digital prescription tracking, smart queueing, and AI-powered health insights.
+              Elevate your clinical workflow and medical report management. MediTrack is designed for doctors and patients across Bangladesh who value digital prescription tracking.
             </motion.p>
 
             <motion.p 
@@ -144,7 +144,7 @@ export default function Landing() {
               transition={{ delay: 0.3 }}
               className="font-black text-slate-900 dark:text-white text-base md:text-lg"
             >
-              Go fully digital within 24 hours with AI.
+              
             </motion.p>
 
             {/* CTAs */}
